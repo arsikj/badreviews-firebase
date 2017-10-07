@@ -4,6 +4,8 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
+import Android from '@/components/Android'
+import Favourites from '@/components/Favourites'
 
 import firebase from 'firebase'
 
@@ -36,6 +38,22 @@ let router = new Router({
       path: '/sign-up',
       name: 'SignUp',
       component: SignUp
+    },
+    {
+      path: '/android',
+      name: 'Android',
+      component: Android,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/favourites',
+      name: 'Favourites',
+      component: Favourites,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 })

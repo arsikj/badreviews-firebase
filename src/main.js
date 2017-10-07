@@ -4,6 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import firebase from 'firebase'
+import 'materialize-css'
+import 'materialize-css/dist/css/materialize.css'
 
 Vue.config.productionTip = false
 

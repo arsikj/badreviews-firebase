@@ -1,15 +1,30 @@
 <template>
-  <div class="login">
+  <div class="container">
     <h3>Sign in</h3>
-    <input type="email" v-model="email" placeholder="Email"><br>
-    <input type="password" v-model="password" placeholder="Password"><br>
-    <button v-on:click="login">Connection</button>
-    <p>You don't have an account? You can <router-link to="/sign-up">create one</router-link></p>
+        <div class="row">
+          <div class="input-field col s6 offset-s3">
+            <input id="email" type="email" class="validate" v-model="email">
+            <label for="email">E-mail</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s6 offset-s3">
+            <input id="password" type="password" class="validate" v-model="password">
+            <label for="password">Password</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s6 offset-s3">
+            <a class="waves-effect waves-light btn" v-on:click="login">Sign in</a>
+            <p>You don't have an account? You can <router-link to="/sign-up">create one</router-link></p>
+          </div>
+        </div>
   </div>
 </template>
 
 <script>
 import firebase from 'firebase'
+import materializecss from 'materialize-css'
 
 export default {
   name: 'login',
@@ -35,25 +50,5 @@ export default {
 </script>
 
 <style scoped>
-  .login {
-    margin-top: 40px;
-  }
-  input {
-    margin: 10px 0;
-    width: 20%;
-    padding: 15px;
-  }
-  button {
-    margin-top: 20px;
-    cursor: pointer;
-  }
-  p {
-    margin-top: 40px;
-    font-size: 13px;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  p a {
 
-  }
 </style>

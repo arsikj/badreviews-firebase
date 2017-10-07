@@ -1,23 +1,50 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <br>
-      <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
-    <button v-on:click="logout">Logout</button>
+  <div>
+    <nav class="teal lighten-2">
+      <div class="nav-wrapper">
+        <a href="#!" class="brand-logo">Bad reviews</a>
+        <ul class="right hide-on-med-and-down">
+          <li class="active"><router-link to="/hello">iOS</router-link></li>
+          <li><router-link to="/android">Android</router-link></li>
+          <li><router-link to="/favourites">Favourites</router-link></li>
+          <li><a class="waves-effect waves-light btn red darken-1" v-on:click="logout">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="col s10 offset-s1">
+            <h3>Bad reviews for iOS applications</h3>
+            <table class="bordered striped responsive-table">
+              <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Item Name</th>
+                    <th>Item Price</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Alvin</td>
+                  <td>Eclair</td>
+                  <td>$0.87</td>
+                </tr>
+                <tr>
+                  <td>Alan</td>
+                  <td>Jellybean</td>
+                  <td>$3.76</td>
+                </tr>
+                <tr>
+                  <td>Jonathan</td>
+                  <td>Lollipop</td>
+                  <td>$7.00</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -37,38 +64,10 @@ export default {
           this.$router.replace('login');
         })
       }
-    }
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
-
-button {
-  padding: 10px 20px;
-  background: #42b983;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 22px;
-  outline: 0;
-  cursor: pointer;
-}
 </style>
