@@ -7,7 +7,7 @@ import SignUp from '@/components/SignUp'
 import Android from '@/components/Android'
 import Favourites from '@/components/Favourites'
 
-import firebase from 'firebase'
+import {firebaseConfig} from '../firebaseConfig';
 
 Vue.use(Router)
 
@@ -59,7 +59,7 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let currentUser = firebase.auth().currentUser;
+  let currentUser = firebaseConfig.auth().currentUser;
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if(requiresAuth && !currentUser)

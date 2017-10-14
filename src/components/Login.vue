@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import firebase from 'firebase'
-import materializecss from 'materialize-css'
+import {firebaseConfig} from '../firebaseConfig';
 
 export default {
   name: 'login',
@@ -36,8 +35,9 @@ export default {
   },
   methods: {
     login: function(){
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
+      firebaseConfig.auth().signInWithEmailAndPassword(this.email, this.password).then(
         (user) => {
+          this.$ma.trackEvent({category: 'Click', action: 'Login success', label: '', value: ''})
           this.$router.replace('hello');
         },
         (err) => {

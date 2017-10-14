@@ -3,23 +3,20 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import firebase from 'firebase'
+import VueResource from 'vue-resource'
+import VModal from 'vue-js-modal'
 import 'materialize-css'
 import 'materialize-css/dist/css/materialize.css'
+import VueMultianalytics from 'vue-multianalytics'
+import {firebaseConfig} from './firebaseConfig';
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+Vue.use(VueResource);
+Vue.use(VModal);
 
 let app;
-let config = {
-    apiKey: "AIzaSyAvdHpLf9WAvbpzN72oYdFFWunxA03qk8M",
-    authDomain: "badreviews-1c0c4.firebaseapp.com",
-    databaseURL: "https://badreviews-1c0c4.firebaseio.com",
-    projectId: "badreviews-1c0c4",
-    storageBucket: "badreviews-1c0c4.appspot.com",
-    messagingSenderId: "481022068097"
-  };
-firebase.initializeApp(config);
-firebase.auth().onAuthStateChanged(function(user){
+
+firebaseConfig.auth().onAuthStateChanged(function(user){
   if(!app) {
     app = new Vue({
       el: '#app',
@@ -29,3 +26,13 @@ firebase.auth().onAuthStateChanged(function(user){
     })
   }
 });
+
+let mixpanelConfig = {
+  token: 'd67b0a567c1dc07580eac502df3bbb78 '
+}
+
+Vue.use(VueMultianalytics, {
+  modules: {
+    mixpanel: mixpanelConfig
+  }
+})

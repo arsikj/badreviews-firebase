@@ -11,51 +11,68 @@
         </ul>
       </div>
     </nav>
-    <div class="container">
+    <!-- <div class="container"> -->
       <div class="row">
-        <div class="col s10 offset-s1">
-            <h3>Bad reviews for iOS applications</h3>
+          <h3>Bad reviews for iOS applications</h3>
+        <div class="col s2">
+          <ul class="collection with-header">
+            <li class="collection-header"><h5>Select category</h5></li>
+            <li class="collection-item">News</li>
+            <li class="collection-item">Music</li>
+            <li class="collection-item">Sport</li>
+            <li class="collection-item">Travel</li>
+            <li class="collection-item">Health</li>
+            <li class="collection-item">Kids</li>
+            <li class="collection-item">Medical</li>
+            <li class="collection-item">Finance</li>
+            <li class="collection-item">Book</li>
+          </ul>
+        </div>
+        <div class="col s10">
             <table class="bordered striped responsive-table">
               <thead>
                 <tr>
+                    <th>Image</th>
                     <th>Name</th>
-                    <th>Item Name</th>
-                    <th>Item Price</th>
+                    <th>Description</th>
+                    <th>Average rating</th>
+                    <th>Bundle id</th>
+                    <th>Developer</th>
+                    <th>Action</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr>
-                  <td>Alvin</td>
-                  <td>Eclair</td>
-                  <td>$0.87</td>
-                </tr>
-                <tr>
-                  <td>Alan</td>
-                  <td>Jellybean</td>
-                  <td>$3.76</td>
-                </tr>
-                <tr>
-                  <td>Jonathan</td>
-                  <td>Lollipop</td>
-                  <td>$7.00</td>
+                <tr v-for="app in apps">
+                  <td><img v-bind:src="app.artworkUrl100" alt=""></td>
+                  <td><a target="_blank" v-bind:href="app.trackViewUrl">{{app.trackCensoredName}}</a></td>
+                  <td>{{app.description.substring(0, 70)}}...</td>
+                  <td>{{app.averageUserRating}}</td>
+                  <td>{{app.bundleId}}</td>
+                  <td>{{app.artistName}}</td>
+                  <td>
+                    <button class="btn waves-effect waves-light" type="button" name="action">
+                      Show
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
   </div>
 </template>
 
 <script>
-import firebase from 'firebase'
+import {firebaseConfig} from '../firebaseConfig';
 
 export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      apps: []
     }
   },
   methods: {
@@ -63,8 +80,19 @@ export default {
         firebase.auth().signOut().then(() => {
           this.$router.replace('login');
         })
+      },
+      getApps: function(){
+        this.$http.get('https://data.42matters.com/api/v2.0/ios/apps/search.json?q=Book&limit=20&access_token=dfaa2e3ea44ee26920fc5d6f904d680ed2863835').then(response => {
+        this.apps = response.body.results;
+        console.log(this.apps);
+        }, response => {
+
+        });
       }
-  }
+    },
+    beforeMount(){
+      this.getApps();
+    }
 }
 </script>
 
