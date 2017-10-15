@@ -39,6 +39,7 @@
                     <th>Bundle id</th>
                     <th>Developer</th>
                     <th>Action</th>
+                    <th><a class="waves-effect waves-light btn red darken-1" v-on:click="getApps">Logout</a></th>
                 </tr>
               </thead>
 
@@ -55,13 +56,25 @@
                       Show
                     </button>
                   </td>
+                  <td>dsadsa</td>
                 </tr>
               </tbody>
             </table>
         </div>
       </div>
     <!-- </div> -->
+    <modal name="bad-reviews" @before-open="openModal">
+
+
+      <div class="card">
+            <div class="card-content">
+              <span class="card-title">Bad Reviews</span>
+              <p>{{ content }}</p>
+            </div>
+          </div>
+    </modal>
   </div>
+
 </template>
 
 <script>
@@ -72,7 +85,8 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      apps: []
+      apps: [],
+      content: ''
     }
   },
   methods: {
@@ -84,15 +98,22 @@ export default {
       getApps: function(){
         this.$http.get('https://data.42matters.com/api/v2.0/ios/apps/search.json?q=Book&limit=20&access_token=dfaa2e3ea44ee26920fc5d6f904d680ed2863835').then(response => {
         this.apps = response.body.results;
-        console.log(this.apps);
         }, response => {
 
         });
+      },
+      openModal: function(event) {
+        console.log(event.params.foo);
+        this.content = event.params.foo;
+      },
+      showDetails: function(){
+        this.$modal.show('bad-reviews', {foo:'bar'});
       }
     },
     beforeMount(){
-      this.getApps();
+      //this.getApps();
     }
+
 }
 </script>
 
