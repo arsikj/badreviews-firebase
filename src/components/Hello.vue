@@ -158,7 +158,7 @@ export default {
       }
     },
     beforeMount(){
-      //this.getApps();
+      this.getApps();
     }
 
 }
