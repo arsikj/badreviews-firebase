@@ -37,9 +37,11 @@ export default {
     signUp: function(){
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
         (user) => {
+          this.$ma.trackEvent({category: 'Click', action: 'Sign up success', label: '', value: ''});
           this.$router.replace('hello');
         },
         (err) => {
+          this.$ma.trackEvent({category: 'Click', action: 'Sign up failed', label: '', value: ''});
           alert('Oops. ' + err.message);
         }
       );

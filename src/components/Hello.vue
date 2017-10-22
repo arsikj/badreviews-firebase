@@ -17,15 +17,15 @@
         <div class="col s2">
           <ul class="collection with-header">
             <li class="collection-header"><h5>Select category</h5></li>
-            <li class="collection-item">News</li>
-            <li class="collection-item">Music</li>
-            <li class="collection-item">Sport</li>
-            <li class="collection-item">Travel</li>
-            <li class="collection-item">Health</li>
-            <li class="collection-item">Kids</li>
-            <li class="collection-item">Medical</li>
-            <li class="collection-item">Finance</li>
-            <li class="collection-item">Book</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('News')">News</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Music')">Music</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Sport')">Sport</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Travel')">Travel</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Health')">Health</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Kids')">Kids</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Medical')">Medical</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Finance')">Finance</li>
+            <li class="collection-item category-item" v-on:click="getAppsByCategory('Book')">Book</li>
           </ul>
         </div>
         <div class="col s10">
@@ -39,7 +39,6 @@
                     <th>Bundle id</th>
                     <th>Developer</th>
                     <th>Action</th>
-                    <th><a class="waves-effect waves-light btn red darken-1" v-on:click="getApps">Logout</a></th>
                 </tr>
               </thead>
 
@@ -52,26 +51,26 @@
                   <td>{{app.bundleId}}</td>
                   <td>{{app.artistName}}</td>
                   <td>
-                    <button class="btn waves-effect waves-light" type="button" name="action">
+                    <button class="btn waves-effect waves-light" type="button" style="width: 100px" v-on:click="showDetails(app.trackId)" name="action">
                       Show
                     </button>
+                    <button class="btn waves-effect waves-light" type="button" style="margin-top: 10px; width: 100px;" v-on:click="addFavourite(app)" name="action">
+                      Add
+                    </button>
                   </td>
-                  <td>dsadsa</td>
                 </tr>
               </tbody>
             </table>
         </div>
       </div>
     <!-- </div> -->
-    <modal name="bad-reviews" @before-open="openModal">
-
-
+    <modal name="bad-reviews" @before-open="openModal" :height="400" :draggable="true">
       <div class="card">
-            <div class="card-content">
-              <span class="card-title">Bad Reviews</span>
-              <p>{{ content }}</p>
-            </div>
-          </div>
+        <div class="card-content">
+          <span class="card-title">Bad Reviews</span>
+          <p v-html="content"></p>
+        </div>
+      </div>
     </modal>
   </div>
 
@@ -79,6 +78,7 @@
 
 <script>
 import {firebaseConfig} from '../firebaseConfig';
+import toastr from 'toastr'
 
 export default {
   name: 'hello',
@@ -91,7 +91,8 @@ export default {
   },
   methods: {
       logout: function() {
-        firebase.auth().signOut().then(() => {
+        firebaseConfig.auth().signOut().then(() => {
+          this.$ma.trackEvent({category: 'Click', action: 'User logout', label: '', value: ''});
           this.$router.replace('login');
         })
       },
@@ -99,15 +100,61 @@ export default {
         this.$http.get('https://data.42matters.com/api/v2.0/ios/apps/search.json?q=Book&limit=20&access_token=dfaa2e3ea44ee26920fc5d6f904d680ed2863835').then(response => {
         this.apps = response.body.results;
         }, response => {
-
+          console.log("Error: " + response);
         });
       },
       openModal: function(event) {
-        console.log(event.params.foo);
-        this.content = event.params.foo;
+        this.content = event.params.reviews;
       },
-      showDetails: function(){
-        this.$modal.show('bad-reviews', {foo:'bar'});
+      showDetails: function(appId){
+        var url = "https://data.42matters.com/api/v2.0/ios/apps/reviews.json?id=" + appId
+        + "&access_token=dfaa2e3ea44ee26920fc5d6f904d680ed2863835&rating=2";
+        this.$http.headers.common['Access-Control-Allow-Origin'] = true;
+        this.$http.headers.common['Access-Control-Allow-Origin'] = '*'
+        this.$http.options.emulateJSON = true;
+        this.$http.get(url).then(response => {
+          var reviews = response.body.reviews;
+          var reviewsText = "";
+          var length = 5;
+          if(response.body.message) {
+            reviewsText = "No reviews available for app id " + appId;
+          } else {
+            if(reviews.length < 5) {
+              length = reviews.length;
+            }
+            for(var i = 0; i < length; i ++) {
+              reviewsText += (i+1)+". ";
+              reviewsText += reviews[i].content;
+              reviewsText += "\n\n<br>";
+            }
+          }
+          this.$ma.trackEvent({category: 'Click', action: 'Viewed bad reviews for iOS', label: '', value: ''});
+          this.$modal.show('bad-reviews', {reviews: reviewsText});
+        }, response => {
+            var reviewsText = "No reviews available for app id " + appId;
+            this.$ma.trackEvent({category: 'Click', action: 'Viewed bad reviews for iOS failed', label: '', value: ''});
+            this.$modal.show('bad-reviews', {reviews: reviewsText});
+        });
+      },
+      getAppsByCategory: function(category){
+        var url = "https://data.42matters.com/api/v2.0/ios/apps/search.json?q="
+                  + category
+                  + "&limit=20&access_token=dfaa2e3ea44ee26920fc5d6f904d680ed2863835";
+        this.$http.get(url).then(response => {
+        this.apps = response.body.results;
+        this.$ma.trackEvent({category: 'Click', action: 'Changed iOS category ' + category, label: '', value: ''});
+        }, response => {
+          this.$ma.trackEvent({category: 'Click', action: 'Changed iOS category failed' + category, label: '', value: ''});
+          console.log("Error: " + response);
+        });
+      },
+      addFavourite: function(app) {
+        let db = firebaseConfig.database();
+        let currentUser = firebaseConfig.auth().currentUser.uid;
+        let favouritesRef = db.ref('favourites/' + currentUser + '/ios');
+        favouritesRef.push(app);
+        this.$ma.trackEvent({category: 'Click', action: 'Added favourite iOS app', label: '', value: ''});
+        toastr.success('iOS app successfully added to favourites')
       }
     },
     beforeMount(){
@@ -117,6 +164,12 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .category-item {
+    cursor: pointer;
+    cursor: hand;
+  }
+  .category-item:hover {
+    background: #26a69a;
+  }
 </style>

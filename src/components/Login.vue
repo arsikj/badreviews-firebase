@@ -37,10 +37,11 @@ export default {
     login: function(){
       firebaseConfig.auth().signInWithEmailAndPassword(this.email, this.password).then(
         (user) => {
-          this.$ma.trackEvent({category: 'Click', action: 'Login success', label: '', value: ''})
+          this.$ma.trackEvent({category: 'Click', action: 'Login success', label: '', value: ''});
           this.$router.replace('hello');
         },
         (err) => {
+          this.$ma.trackEvent({category: 'Click', action: 'Login success', label: '', value: ''});
           alert('Oops. ' + err.message);
         }
       );

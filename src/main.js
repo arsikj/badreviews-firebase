@@ -8,11 +8,13 @@ import VModal from 'vue-js-modal'
 import 'materialize-css'
 import 'materialize-css/dist/css/materialize.css'
 import VueMultianalytics from 'vue-multianalytics'
+import VueFire from 'vuefire'
 import {firebaseConfig} from './firebaseConfig';
 
 Vue.config.productionTip = false;
 Vue.use(VueResource);
 Vue.use(VModal);
+Vue.use(VueFire)
 
 let app;
 
